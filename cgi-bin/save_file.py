@@ -48,13 +48,13 @@ if fileitem.filename:
     # strip leading path from file name to avoid 
     # directory traversal attacks
     fn = os.path.basename(fileitem.filename)
-    open('/tmp/' + fn, 'wb').write(fileitem.file.read())
+    open('images/' + fn, 'wb').write(fileitem.file.read())
 
     reg_model = image_recognition()
-    result = reg_model.make_prediction(os.path.join('/tmp', fileitem.filename))
+    filepath = os.path.join('images', fileitem.filename)
+    result = reg_model.make_prediction(filepath) 
     
     message = 'Model Prediction: %s'%(result) 
-    
                       
 else:
     message = 'No file was uploaded'
@@ -63,7 +63,8 @@ print ("""\
       Content-Type: text/html\n
       <html>
       <body>
+        <img src="http://localhost:8080/images/%s">
         <p>%s</p>
       </body>
       </html>
-      """ % (message,))
+      """ % (fileitem.filename, message,))
