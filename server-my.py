@@ -4,7 +4,7 @@ from http.server import HTTPServer, CGIHTTPRequestHandler
 
 
 webdir = '.'   # where your html files and cgi-bin script directory live
-port   = 80    # default http://localhost/, else use http://localhost:xxxx/
+port   = 8080    # default http://localhost/, else use http://localhost:xxxx/
 
 os.chdir(webdir)                                       # run in HTML root dir
 srvraddr = ("", port)                                  # my hostname, portnumber
