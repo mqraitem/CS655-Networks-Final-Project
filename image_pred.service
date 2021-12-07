@@ -6,6 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=always
 WorkingDirectory=/users/mqraitem/image_pred
+User=mqraitem
 ExecStart=/usr/bin/python3 server-my.py
 
 [Install]
