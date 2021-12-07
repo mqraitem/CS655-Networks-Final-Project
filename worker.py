@@ -93,6 +93,8 @@ def threaded_client(connection):
         else: 
             invalid_msg = '404 Error'
             connection.sendall(str.encode(invalid_msg)) 
+    
+    connection.close() 
 
 ServerSocket = socket.socket()
 host = ''
