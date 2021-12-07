@@ -15,11 +15,14 @@ from selenium.webdriver.chrome.service import Service
 def get_response(final_html):
     soup = BeautifulSoup(final_html, "html.parser")
     resp = soup.findAll('p')
-    resp = [element.get_text() for element in resp]
-    
-    response_time = resp[2].split(':')[1].strip('\n') 
-    worker_idx = resp[3].split(':')[1].strip() 
-    return response_time, worker_idx
+        
+    if len(resp) > 1: 
+        resp = [element.get_text() for element in resp]
+        response_time = resp[2].split(':')[1].strip('\n') 
+        worker_idx = resp[3].split(':')[1].strip() 
+        return response_time, worker_idx
+    else: 
+        return -1, -1 
 
 def execute_process(url): 
     options = Options()
@@ -44,7 +47,7 @@ def execute_process(url):
 
 MODE = 'Seq'
 total_req_seq = 1
-con_req = 1
+con_req = 5
 url = "http://pcvm4-3.instageni.colorado.edu:8080/"
 url_list = [url] * con_req
 
@@ -53,18 +56,26 @@ from multiprocessing import Pool
 
 if MODE == 'Seq': 
     
+    success_count = 0  
+    avg_time = 0
+    
     for _ in range(total_req_seq): 
 
         pool = Pool(processes=con_req)
         ret = pool.map(execute_process, url_list)
-        avg_time = 0
         for final_html, total_time in ret: 
             avg_time += total_time 
             response_time, worker_idx = get_response(final_html) 
+            
+            if response_time != -1: 
+                success_rate += 1 
+
             print('Model Inference time: %s'%response_time) 
             print('Assigned Worker: %s'%worker_idx)
         
-        #time.sleep(10)
+        time.sleep(10)
+
     print('Average Delay: %.3f'%(avg_time/(con_req*total_req_seq)))
+    print('Sucess Rate: %.3f'%(sucess_count/(con_req*total_req_seq)))
 
 

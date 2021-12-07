@@ -10,6 +10,7 @@ workers_info = workers_info.readlines()
 workers_info = [line.strip().split(',') for line in workers_info]
 
 SLEEP_BETWEEN_REQUESTS = 2
+MAX_ITERATIONS = 10
 
 def recvall(s):
   End = '\n'
@@ -38,8 +39,8 @@ if fileitem.filename:
     fn = os.path.basename(fileitem.filename)
     open('images/' + fn, 'wb').write(fileitem.file.read())
     connected_to_worker = False 
-
-    while connected_to_worker == False:  
+    iteration = 0 
+    while (iteration < MAX_ITERATIONS) and (connected_to_worker == False):  
         for worker_idx, worker in enumerate(workers_info): 
             ip, port = worker 
 
@@ -75,9 +76,14 @@ if fileitem.filename:
                 break
 
             time.sleep(SLEEP_BETWEEN_REQUESTS) 
+        
+        iteration += 1 
 
 else:
     message = '<p>No file was uploaded<\p>'
+
+if connected_to_worker == False: 
+    message = '<p>Failure<\p>'
 
 if len(message.split(',')) > 1: 
     message = message.split(',') 
