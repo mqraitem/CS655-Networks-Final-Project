@@ -11,9 +11,6 @@ import time
 
 
 
-MODE = 'Seq'
-total_req_seq = 3
-
 def get_response(final_html):
     soup = BeautifulSoup(final_html, "html.parser")
     resp = soup.find('p').getText()
@@ -27,18 +24,21 @@ def execute_process(url):
     start = time.time() 
     driver.get(url)
 
-    driver.find_element(By.ID, "upload_proc").send_keys(os.getcwd() + '/tmp.jpg')
+    driver.find_element(By.ID, "upload_proc").send_keys(os.getcwd() + '/sample.jpg')
     button_element = driver.find_element(By.ID, 'submit_proc')
     button_element.click()
 
-    WebDriverWait(driver, 15).until(EC.url_changes(url))
+    
+    WebDriverWait(driver, 30).until(EC.url_changes(url))
     final_html = driver.page_source
     end = time.time() 
     total_time = end - start
     return final_html, total_time 
 
 
-con_req = 5
+MODE = 'Seq'
+total_req_seq = 1
+con_req = 1
 url = "http://pcvm4-3.instageni.colorado.edu:8080/"
 url_list = [url] * con_req
 
@@ -46,12 +46,18 @@ import multiprocessing as mp
 from multiprocessing import Pool
 
 if MODE == 'Seq': 
-    pool = Pool(processes=con_req)
-    ret = pool.map(execute_process, url_list)
-    for _, total_time in ret: 
-        print(total_time)
-    #print(result) 
+    
+    for _ in range(total_req_seq): 
 
-    #print('Average Delay: %.3f'%(total_time/total_req_seq))
+        pool = Pool(processes=con_req)
+        ret = pool.map(execute_process, url_list)
+        avg_time = 0
+        for final_html, total_time in ret: 
+            avg_time += total_time 
+            #resp = get_response(final_html) 
+            #print(resp) 
+        
+        time.sleep(10)
+    print('Average Delay: %.3f'%(avg_time/(con_req*total_req_seq)))
 
 
