@@ -14,8 +14,12 @@ from selenium.webdriver.chrome.service import Service
 
 def get_response(final_html):
     soup = BeautifulSoup(final_html, "html.parser")
-    resp = soup.find('p').getText()
-    return resp
+    resp = soup.findAll('p')
+    resp = [element.get_text() for element in resp]
+    
+    response_time = resp[2].split(':')[1].strip('\n') 
+    worker_idx = resp[3].split(':')[1].strip() 
+    return response_time, worker_idx
 
 def execute_process(url): 
     options = Options()
@@ -56,8 +60,9 @@ if MODE == 'Seq':
         avg_time = 0
         for final_html, total_time in ret: 
             avg_time += total_time 
-            resp = get_response(final_html) 
-            print(resp, total_time)
+            response_time, worker_idx = get_response(final_html) 
+            print('Model Inference time: %s'%response_time) 
+            print('Assigned Worker: %s'%worker_idx)
         
         #time.sleep(10)
     print('Average Delay: %.3f'%(avg_time/(con_req*total_req_seq)))
