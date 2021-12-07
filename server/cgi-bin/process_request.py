@@ -40,7 +40,7 @@ if fileitem.filename:
     connected_to_worker = False 
 
     while connected_to_worker == False:  
-        for word_idx, worker in enumerate(workers_info): 
+        for worker_idx, worker in enumerate(workers_info): 
             ip, port = worker 
 
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
