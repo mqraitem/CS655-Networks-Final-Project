@@ -5,7 +5,7 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-WorkingDirectory=/users/mqraitem/image_pred
+WorkingDirectory=/users/mqraitem/geni_project 
 User=mqraitem
 ExecStart=/usr/bin/python3 server-my.py
 
