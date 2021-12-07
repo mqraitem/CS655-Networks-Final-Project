@@ -77,14 +77,25 @@ if fileitem.filename:
             time.sleep(SLEEP_BETWEEN_REQUESTS) 
 
 else:
-    message = 'No file was uploaded'
+    message = '<p>No file was uploaded<\p>'
+
+if len(message.split(',')) > 1: 
+    message = message.split(',') 
+    message = [line.split(':') for line in message]
+    values = {item:key for item,key in message}
+    message = '' 
+    for item, key in values.items(): 
+        message += '<p>%s: %s</p>\n'%(item, key)
+
 
 print ("""\
       Content-Type: text/html\n
       <html>
       <body>
-        <img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
-        <p>%s</p>
+        <div style="text-align: center">
+        <img src="http://pcvm4-3.instageni.colorado.edu:8080/images/%s">
+        %s
+        </div>
       </body>
       </html>
       """ % (fileitem.filename, message))
