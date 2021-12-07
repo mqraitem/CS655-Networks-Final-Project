@@ -44,38 +44,39 @@ def execute_process(url):
     total_time = end - start
     return final_html, total_time 
 
+if __name__ == "__main__":   
 
-MODE = 'Seq'
-total_req_seq = 1
-con_req = 5
-url = "http://pcvm4-3.instageni.colorado.edu:8080/"
-url_list = [url] * con_req
+    MODE = 'Seq'
+    total_req_seq = 1
+    con_req = 5
+    url = "http://pcvm4-3.instageni.colorado.edu:8080/"
+    url_list = [url] * con_req
 
-import multiprocessing as mp
-from multiprocessing import Pool
+    import multiprocessing as mp
+    from multiprocessing import Pool
 
-if MODE == 'Seq': 
-    
-    success_count = 0  
-    avg_time = 0
-    
-    for _ in range(total_req_seq): 
-
-        pool = Pool(processes=con_req)
-        ret = pool.map(execute_process, url_list)
-        for final_html, total_time in ret: 
-            avg_time += total_time 
-            response_time, worker_idx = get_response(final_html) 
-            
-            if response_time != -1: 
-                success_rate += 1 
-
-            print('Model Inference time: %s'%response_time) 
-            print('Assigned Worker: %s'%worker_idx)
+    if MODE == 'Seq': 
         
-        time.sleep(10)
+        success_count = 0  
+        avg_time = 0
+        
+        for _ in range(total_req_seq): 
 
-    print('Average Delay: %.3f'%(avg_time/(con_req*total_req_seq)))
-    print('Sucess Rate: %.3f'%(sucess_count/(con_req*total_req_seq)))
+            pool = Pool(processes=con_req)
+            ret = pool.map(execute_process, url_list)
+            for final_html, total_time in ret: 
+                avg_time += total_time 
+                response_time, worker_idx = get_response(final_html) 
+                
+                if response_time != -1: 
+                    success_count += 1 
+
+                print('Model Inference time: %s'%response_time) 
+                print('Assigned Worker: %s'%worker_idx)
+            
+            time.sleep(10)
+
+        print('Average Delay: %.3f'%(avg_time/(con_req*total_req_seq)))
+        print('Sucess Rate: %.3f'%(success_count/(con_req*total_req_seq)))
 
 
