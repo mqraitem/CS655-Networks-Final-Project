@@ -83,7 +83,7 @@ def threaded_client(connection):
                 img_written = open('tmp.jpg', 'wb')
                 img_written.write(img) 
                 img_written.close() 
-                print('Image Rec')  
+                print('Image Received')  
 
                 reg_model = image_recognition()
                 result = reg_model.make_prediction('tmp.jpg') 
@@ -103,7 +103,7 @@ ThreadCount = 0
 
 ServerSocket.bind((host, port))
 
-print('Waitiing for a Connection..')
+print('Waiting for a Connection..')
 ServerSocket.listen(5)
 
 while True:

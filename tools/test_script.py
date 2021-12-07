@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time 
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 
 def get_response(final_html):
@@ -19,9 +20,8 @@ def get_response(final_html):
 def execute_process(url): 
     options = Options()
     options.add_argument("--headless")
-    #driver = webdriver.Firefox(options=options)
-    #driver = webdriver.PhantomJS(executable_path='/usr/local/bin/phantomjs')
-    driver = webdriver.Chrome('/usr/bin/chromedriver', options=options)
+    ser = Service("/usr/bin/chromedriver")
+    driver = webdriver.Chrome(service=ser, options=options)
 
     start = time.time() 
     driver.get(url)
@@ -40,7 +40,7 @@ def execute_process(url):
 
 MODE = 'Seq'
 total_req_seq = 1
-con_req = 10
+con_req = 1
 url = "http://pcvm4-3.instageni.colorado.edu:8080/"
 url_list = [url] * con_req
 

@@ -1,22 +1,15 @@
 #!/usr/bin/python3
 
-from __future__ import division, print_function
-import time
-import os
-from PIL import Image
-import torch
-from torchvision import transforms
-import torchvision.models as models
-
 import cgi, os
 import cgitb; cgitb.enable()
 import socket
-
+import time
 
 workers_info = open('workers.txt', 'r') 
 workers_info = workers_info.readlines() 
 workers_info = [line.strip().split(',') for line in workers_info]
 
+SLEEP_BETWEEN_REQUESTS = 2
 
 def recvall(s):
   End = '\n'
@@ -39,13 +32,9 @@ def check_available(resp_main):
 
 form = cgi.FieldStorage()
 
-# Get filename here.
 fileitem = form['filename']
-import time
-# Test if the file was uploaded
 if fileitem.filename:
-    # strip leading path from file name to avoid 
-    # directory traversal attacks
+    
     fn = os.path.basename(fileitem.filename)
     open('images/' + fn, 'wb').write(fileitem.file.read())
     connected_to_worker = False 
@@ -85,17 +74,17 @@ if fileitem.filename:
             if connected_to_worker: 
                 break
 
-            time.sleep(1) 
+            time.sleep(SLEEP_BETWEEN_REQUESTS) 
 
 else:
     message = 'No file was uploaded'
 
-#<img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
 print ("""\
       Content-Type: text/html\n
       <html>
       <body>
         <p>%s</p>
+        <img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
       </body>
       </html>
-      """ % ( message,))
+      """ % (message,fileitem.filename))
