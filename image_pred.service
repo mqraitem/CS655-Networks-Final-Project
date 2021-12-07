@@ -1,0 +1,12 @@
+[Unit]
+Description=My test service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/users/mqraitem/image_pred
+ExecStart=/usr/bin/python3 server-my.py
+
+[Install]
+WantedBy=multi-user.target
