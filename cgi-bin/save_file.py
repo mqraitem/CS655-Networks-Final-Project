@@ -41,7 +41,7 @@ form = cgi.FieldStorage()
 
 # Get filename here.
 fileitem = form['filename']
-
+import time
 # Test if the file was uploaded
 if fileitem.filename:
     # strip leading path from file name to avoid 
@@ -85,15 +85,17 @@ if fileitem.filename:
             if connected_to_worker: 
                 break
 
+            time.sleep(1) 
+
 else:
     message = 'No file was uploaded'
-         
+
+#<img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
 print ("""\
       Content-Type: text/html\n
       <html>
       <body>
-        <img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
         <p>%s</p>
       </body>
       </html>
-      """ % (fileitem.filename, message,))
+      """ % ( message,))

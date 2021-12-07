@@ -1,0 +1,11 @@
+--2021-12-07 12:09:15--  https://www.google.com/url?sa=i
+Resolving www.google.com (www.google.com)... 142.250.72.36, 2607:f8b0:400f:804::2004
+Connecting to www.google.com (www.google.com)|142.250.72.36|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘url?sa=i’
+
+url?sa=i                      [<=>                                 ]       0  --.-KB/s               url?sa=i                      [ <=>                                ]   1.40K  --.-KB/s    in 0s      
+
+2021-12-07 12:09:15 (7.16 MB/s) - ‘url?sa=i’ saved [1436]
+
