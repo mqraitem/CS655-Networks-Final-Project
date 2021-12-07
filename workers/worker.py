@@ -41,7 +41,7 @@ class image_recognition:
             end_time = time.time()
         probabilities = torch.nn.functional.softmax(output[0], dim=0)
         top1_prob, top1_catid = torch.topk(probabilities, 1)
-        result = "Prediction:\"" + str(self.classes[top1_catid]) + " \";Confidence:%.3f"% (top1_prob.item())\
+        result = "Prediction:" + str(self.classes[top1_catid]) + ",Confidence:%.3f"% (top1_prob.item())\
                  + ",Response Time:%.3f\n" % (end_time - start_time)
         return result
 
