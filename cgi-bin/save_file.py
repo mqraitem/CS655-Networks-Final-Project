@@ -10,33 +10,29 @@ import torchvision.models as models
 
 import cgi, os
 import cgitb; cgitb.enable()
+import socket
 
-class image_recognition:
-    def __init__(self):
-        self.model = models.squeezenet1_1(pretrained=True).eval()
-        self.transform = transforms.Compose([
-                    transforms.Resize(256),
-                    transforms.CenterCrop(224),
-                    transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
-                ])
-        with open("imagenet_classes.txt", "r") as f:
-            categories = [s.strip().split(',')[1] for s in f.readlines()]
-        self.classes = categories
+worker_address = '127.0.0.1'
+PORT = 8081 
 
-    def make_prediction(self, img_path):
-        img = Image.open(img_path)
-        input_tensor = self.transform(img)
-        input_batch = input_tensor.unsqueeze(0)
-        with torch.no_grad():
-            start_time = time.time()
-            output = self.model(input_batch)
-            end_time = time.time()
-        probabilities = torch.nn.functional.softmax(output[0], dim=0)
-        top1_prob, top1_catid = torch.topk(probabilities, 1)
-        result = "Prediction:\"" + str(self.classes[top1_catid]) + " \";  Confidence: %.3f"% (top1_prob.item())\
-                 + ", Response Time: %.3f s" % (end_time - start_time)
-        return result
+def recvall(s):
+  End = '\n'
+  data = ''
+  while True:
+    msg = s.recv(1024).decode()
+    data += msg
+    if End == msg[-1:]:
+      break
+  return data
+
+
+def check_available(resp_main): 
+    msg = resp_main.strip('\n')
+    if msg == '200 Busy': 
+        return False
+            
+    if msg == '201 Free':
+        return True 
 
 form = cgi.FieldStorage()
 
@@ -50,10 +46,27 @@ if fileitem.filename:
     fn = os.path.basename(fileitem.filename)
     open('images/' + fn, 'wb').write(fileitem.file.read())
 
-    reg_model = image_recognition()
-    filepath = os.path.join('images', fileitem.filename)
-    result = reg_model.make_prediction(filepath) 
-    
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((worker_address, PORT))
+ 
+        while True: 
+        
+            msg_main = '100\n'
+            s.sendall(msg_main.encode()) 
+            resp_main = recvall(s) 
+            
+            if resp_main:
+                print('Worker is free')
+                break 
+        
+        imagepath = os.path.join('images', fileitem.filename)
+        image_to_send = open(imagepath, 'rb')    
+        image_to_send = image_to_send.read()
+        s.sendall(image_to_send)
+         
+        result = recvall(s) 
+
+    result = result.strip('\n')  
     message = 'Model Prediction: %s'%(result) 
                       
 else:
