@@ -83,8 +83,8 @@ print ("""\
       Content-Type: text/html\n
       <html>
       <body>
-        <p>%s</p>
         <img src="http://pcvm1-18.instageni.clemson.edu:8080/images/%s">
+        <p>%s</p>
       </body>
       </html>
-      """ % (message,fileitem.filename))
+      """ % (fileitem.filename, message))
