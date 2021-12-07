@@ -66,7 +66,7 @@ if fileitem.filename:
                      
                     result = recvall(s) 
                     result = result.strip('\n')  
-                    message = result + ',worker:%d'%(worker_idx)
+                    message = result + '\n,worker:%d'%(worker_idx)
                     connected_to_worker = True 
                 
                 s.shutdown(socket.SHUT_RDWR) 
