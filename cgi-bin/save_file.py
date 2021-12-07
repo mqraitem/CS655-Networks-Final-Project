@@ -12,8 +12,11 @@ import cgi, os
 import cgitb; cgitb.enable()
 import socket
 
-worker_address = '127.0.0.1'
-PORT = 8081 
+
+workers_info = open('workers.txt', 'r') 
+workers_info = workers_info.readlines() 
+workers_info = [line.strip().split(',') for line in workers_info]
+
 
 def recvall(s):
   End = '\n'
@@ -45,30 +48,44 @@ if fileitem.filename:
     # directory traversal attacks
     fn = os.path.basename(fileitem.filename)
     open('images/' + fn, 'wb').write(fileitem.file.read())
+    connected_to_worker = False 
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((worker_address, PORT))
- 
-        while True: 
-        
-            msg_main = '100\n'
-            s.sendall(msg_main.encode()) 
-            resp_main = recvall(s) 
+    while connected_to_worker == False:  
+        for worker in workers_info: 
+            ip, port = worker 
+
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            connection = False 
+
+            try: 
+                s.connect((ip, int(port)))
+                connection = True 
+            except: 
+                pass
             
-            if resp_main:
-                print('Worker is free')
-                break 
-        
-        imagepath = os.path.join('images', fileitem.filename)
-        image_to_send = open(imagepath, 'rb')    
-        image_to_send = image_to_send.read()
-        s.sendall(image_to_send)
-         
-        result = recvall(s) 
+            if connection: 
+                msg_main = '100\n'
+                s.sendall(msg_main.encode()) 
+                resp_main = recvall(s) 
+                
+                if resp_main:
+                    print('Worker is free')
+                
+                    imagepath = os.path.join('images', fileitem.filename)
+                    image_to_send = open(imagepath, 'rb')    
+                    image_to_send = image_to_send.read()
+                    s.sendall(image_to_send)
+                     
+                    result = recvall(s) 
+                    result = result.strip('\n')  
+                    message = 'Model Prediction: %s'%(result) 
+                    connected_to_worker = True 
+                
+                s.shutdown(socket.SHUT_RDWR) 
 
-    result = result.strip('\n')  
-    message = 'Model Prediction: %s'%(result) 
-                      
+            if connected_to_worker: 
+                break
+
 else:
     message = 'No file was uploaded'
          
