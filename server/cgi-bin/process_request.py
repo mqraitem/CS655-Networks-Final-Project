@@ -40,7 +40,7 @@ if fileitem.filename:
     connected_to_worker = False 
 
     while connected_to_worker == False:  
-        for worker in workers_info: 
+        for word_idx, worker in enumerate(workers_info): 
             ip, port = worker 
 
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -66,7 +66,7 @@ if fileitem.filename:
                      
                     result = recvall(s) 
                     result = result.strip('\n')  
-                    message = 'Model Prediction: %s'%(result) 
+                    message = result + ',worker:%d'%(worker_idx)
                     connected_to_worker = True 
                 
                 s.shutdown(socket.SHUT_RDWR) 
