@@ -66,10 +66,9 @@ if fileitem.filename:
             if connection: 
                 msg_main = '100\n'
                 s.sendall(msg_main.encode()) 
-                resp_main = recvall(s) 
+                resp_main = check_available(recvall(s))
                 
                 if resp_main:
-                    print('Worker is free')
                 
                     imagepath = os.path.join('images', fileitem.filename)
                     image_to_send = open(imagepath, 'rb')    

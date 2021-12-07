@@ -8,9 +8,15 @@ from PIL import Image
 import torch
 from torchvision import transforms
 import torchvision.models as models
+import sys 
 
-messages = ['100']
-busy = False 
+
+if len(sys.argv) < 2: 
+    print('Please Enter a port number')
+    sys.exit()
+
+PORT = int(sys.argv[1]) 
+BUSY = False
 
 class image_recognition:
     def __init__(self):
@@ -60,16 +66,16 @@ def decode_msg_main(msg):
 
 
 def threaded_client(connection): 
-    global busy 
+    global BUSY
     while True: 
         msg_main = recvall(connection)
         valid = decode_msg_main(msg_main) 
         if valid: 
-            if busy: 
+            if BUSY: 
                 busy_msg = '200 Busy\n'
                 connection.sendall(str.encode(busy_msg)) 
             else: 
-                busy = False
+                BUSY = True
                 free_msg = '201 Free\n'
                 connection.sendall(str.encode(free_msg)) 
                 
@@ -83,14 +89,14 @@ def threaded_client(connection):
                 result = reg_model.make_prediction('tmp.jpg') 
 
                 connection.sendall(str.encode(result))
-
+                BUSY = False
         else: 
             invalid_msg = '404 Error'
             connection.sendall(str.encode(invalid_msg)) 
 
 ServerSocket = socket.socket()
 host = ''
-port = 8081
+port = PORT
 ThreadCount = 0
 
 ServerSocket.bind((host, port))
