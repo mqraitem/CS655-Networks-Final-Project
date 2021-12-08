@@ -59,5 +59,5 @@ $ unzip [chromedriver file]
 $ sudo mv [chromedriver file] /usr/bin
 ```
 
-You should now be able to run the test_script_freq.py. Feel free to modify the simulation parameters inside the script. 
+Finally, please modify the url in the script to match your setup url. Now, you should be able to run the test_script_freq.py. Feel free to modify the simulation parameters inside the script. 
 
