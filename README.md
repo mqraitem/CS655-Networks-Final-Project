@@ -1,8 +1,6 @@
 ## CS655 Image Recognition Application
 
-Project Demo:
-
-We provide instructions for setting up the Application as well as the Testing enviornment below. 
+We provide instructions for setting up the Application as well as the Testing environment below. 
 
 ### Application Set up: 
 First, create the required GENI environment by using the Rspec provided in the repo. Then, you need to clone the repo in the home directory in both your worker and server nodes. Once that done, please follow the relevant instructions below: 
