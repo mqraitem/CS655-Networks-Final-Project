@@ -30,7 +30,7 @@ def get_response(final_html):
 def execute_process(url): 
     options = Options()
     options.add_argument("--headless")
-    ser = Service("/Users/siqiwang/Downloads/chromedriver")
+    ser = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=ser, options=options)
 
     start = time.time() 
@@ -41,7 +41,7 @@ def execute_process(url):
     button_element.click()
 
     
-    WebDriverWait(driver, 100).until(EC.url_changes(url))
+    WebDriverWait(driver, 100000).until(EC.url_changes(url))
     final_html = driver.page_source
     end = time.time() 
     total_time = end - start
