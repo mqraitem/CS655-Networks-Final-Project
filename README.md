@@ -3,8 +3,8 @@
 Project Demo:
 
 
-### Set up instructions: 
-First, create the required GENI environment by using the Rspec provided in the rep. Then, you need to clone the repo in the home directory in both your worker and server nodes. Once that done, please follow the relevant instructions below: 
+### Application Set up instructions: 
+First, create the required GENI environment by using the Rspec provided in the repo. Then, you need to clone the repo in the home directory in both your worker and server nodes. Once that done, please follow the relevant instructions below: 
 
 #### Server Setup: 
 
@@ -42,7 +42,23 @@ The service is now running in the background. To check on its status, run:
 $ sudo systemctl status worker.service
 ```
 
+### Testing Setup: 
+
+For Testing, clone the repo on your personal machine and then run: 
+
+```console
+$ chmod +x install_requirements.sh 
+$ ./install_requirements.sh 
+$ cd tools
+```
+In order to use the browser automation tool Selenium, you will need to install [chromedriver](https://chromedriver.chromium.org/downloads). Please install the one that matches your machine chrome browser version. Then run: 
 
 
+```console
+$ wget [chromedriver link]
+$ unzip [chromedriver file]
+$ sudo mv [chromedriver file] /usr/bin
+```
 
- 
+You should now be able to run the test_script_freq.py. Feel free to modify the simulation parameters inside the script. 
+
