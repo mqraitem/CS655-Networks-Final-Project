@@ -17,7 +17,13 @@ if len(sys.argv) < 2:
 
 PORT = int(sys.argv[1]) 
 BUSY = False
-
+'''
+image_recognition: The class for the recognition task of the input image.
+self.model: pretrained squeezednet.
+self.transform: preprocessing for the image.
+self.classes: class labels of the pretrained net.
+make_prediction: return the classification with the reponse time.
+'''
 class image_recognition:
     def __init__(self):
         self.model = models.squeezenet1_1(pretrained=True).eval()
@@ -46,6 +52,10 @@ class image_recognition:
 
         return result
 
+'''
+recall: receive the message from the worker.
+params: s: connection
+'''
 def recvall(s):
     End = '\n'
     data = ''
@@ -56,16 +66,20 @@ def recvall(s):
             break
     return data
 
-
-def decode_msg_main(msg): 
-    
+'''
+decode_msg_main: check the message from the server: whether it is valid or corrupted.
+'''
+def decode_msg_main(msg):
     msg = msg.strip('\n')
     if msg == '100': 
         return True 
     else: 
         return False 
 
-
+'''
+threaded_client: If the worker is FREE, it takes the image recognition job. Otherwise, it will BUSY message to the server
+and let the server allocate this job to other workers.
+'''
 def threaded_client(connection): 
     global BUSY
     while True: 
