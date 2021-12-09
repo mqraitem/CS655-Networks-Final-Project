@@ -1,5 +1,3 @@
-
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +12,9 @@ from selenium.webdriver.chrome.service import Service
 import multiprocessing as mp
 from multiprocessing import Pool
 
-
+'''
+get_response: Read the html page, and return response time and worker id.
+'''
 def get_response(final_html):
     soup = BeautifulSoup(final_html, "html.parser")
     resp = soup.findAll('p')
@@ -26,7 +26,10 @@ def get_response(final_html):
         return response_time, worker_idx
     else: 
         return -1, -1 
-
+'''
+execute_process: Simulate for a single client. each process is a client with a final_html page. Total time is used for 
+analysis.
+'''
 def execute_process(url): 
     options = Options()
     options.add_argument("--headless")
@@ -35,7 +38,6 @@ def execute_process(url):
 
     start = time.time() 
     driver.get(url)
-
     driver.find_element(By.ID, "upload_proc").send_keys(os.getcwd() + '/sample.jpg')
     button_element = driver.find_element(By.ID, 'submit_proc')
     button_element.click()
@@ -47,6 +49,10 @@ def execute_process(url):
     total_time = end - start
     return final_html, total_time
 
+'''
+con_req_pool: Start a pool of processes simultaneously. This function is called every freq_time to simulate different 
+frequency of jobs.
+'''
 def con_req_pool(con_req, url_list, success_count, avg_time):
 
     pool = Pool(processes=con_req)
@@ -59,7 +65,13 @@ def con_req_pool(con_req, url_list, success_count, avg_time):
         if response_time != -1:
             success_count.value += 1
 
-
+'''
+Important parameters:
+Total_req_seq: number of "pools" of processes.
+con_req: number of processes in the pool. This simulates the load of the job: How many requests are sent to the server at
+the same time.
+freq_time = The time difference that how often the server receives a pool of requests.
+'''
 if __name__ == "__main__":   
 
     total_req_seq = 3
