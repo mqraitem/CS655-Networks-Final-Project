@@ -1,5 +1,6 @@
 ## CS655 Image Recognition Application
 
+[Video Demo](https://www.youtube.com/watch?v=Z1jeqVj5-Lc)
 We provide instructions for setting up the Application as well as the Testing environment below. 
 
 ### Application Set up: 

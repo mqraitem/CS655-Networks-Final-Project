@@ -63,9 +63,9 @@ def con_req_pool(con_req, url_list, success_count, avg_time):
 if __name__ == "__main__":   
 
     total_req_seq = 3
-    con_req = 5
-
+    con_req = 3
     freq_time = 2
+    
     url = "http://pcvm4-3.instageni.colorado.edu:8080/"
     url_list = [url] * con_req
         
